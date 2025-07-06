@@ -34,9 +34,29 @@ Deno.test({
 				expect(testData.length).toBe(GLOBALS.subPaths.length);
 
 				testData.forEach((data) => {
-					// Verify the movieList <ul> was found and contains any amount of movies
+					// Verify the movieList <ul> was found
 					expect(data.movieList).not.toBe(null);
-					expect(data.movieList?.children.length).toBeGreaterThan(0);
+
+					// Verify at least one movie is in the list
+					const movies = data.movieList!.children;
+					expect(movies.length).toBeGreaterThan(0);
+
+					for (let index = 0; index < movies.length; index++) {
+						// Check if every movies schedule, title and poster url can be accessed
+						const movie = movies.item(index);
+
+						const schedule = movie.querySelector('ul')?.getElementsByTagName(
+							'li',
+						);
+						expect(schedule).not.toBe(null);
+
+						const title = movie.querySelector('div > div');
+						expect(title).not.toBe(null);
+
+						const posterUrl =
+							movie.getElementsByTagName('img')[0]?.getAttribute('src') ?? '';
+						expect(posterUrl).not.toBe(null);
+					}
 				});
 			},
 		);
